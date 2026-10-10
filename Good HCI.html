@@ -1,0 +1,703 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>HostelMate Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: three columns. Jump-to-screen list | phone prototype | HCI principles for the current screen. */
+:root{
+  --shell:#0b1613; --shell2:#12241e; --line:#21372e; --ink:#e8f0eb; --ink2:#9fb5aa; --ink3:#7f968b;
+  --active:#9fc4b2; --active-ink:#0b1e17;
+  --bg:#f6f4ee; --surface:#ffffff; --pri:#1a3c34; --pri-ink:#ffffff; --mint:#d9e5de; --bd:#bfc9c2;
+  --tx:#17261f; --mu:#566860; --ph:#66746d; --err:#b3261e; --errbg:#fdecea; --ok:#1b7447;
+  --warnbg:#fcf0b9; --warntx:#5e4500; --pill:#f1e6cf;
+  --font:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  color-scheme:dark;
+}
+html,body{background:var(--shell);color:var(--ink);font-family:var(--font)}
+*{box-sizing:border-box}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid #f2c94c;outline-offset:2px}
+.shell{display:grid;grid-template-columns:300px minmax(0,1fr) 290px;gap:24px;padding:24px 24px;max-width:1280px;margin:0 auto}
+.side,.panel{position:sticky;top:0;align-self:start;max-height:100dvh;overflow:auto;padding-block:24px;margin-block:-24px;min-width:0}
+.side h1{font-size:22px;margin:0 0 8px;font-weight:700;letter-spacing:-.01em}
+.side .lede{margin:0 0 24px;color:var(--ink2);font-size:14px;line-height:1.5}
+.jh{font-size:12px;letter-spacing:.12em;color:var(--ink3);font-weight:600;margin:0 0 10px}
+.grp{font-size:11px;letter-spacing:.1em;color:var(--ink3);text-transform:uppercase;font-weight:600;margin:16px 0 4px 12px}
+.jump{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.jump button{display:block;width:100%;text-align:left;background:none;border:0;border-radius:8px;padding:10px 12px;min-height:40px;font-size:14px;color:var(--ink)}
+.jump button:hover{background:var(--shell2)}
+.jump button[aria-current="true"]{background:var(--active);color:var(--active-ink);font-weight:600}
+.try{margin-top:24px;border:1px solid var(--line);background:var(--shell2);border-radius:12px;padding:14px 16px;font-size:13px;line-height:1.5;color:var(--ink2)}
+.try p{margin:0 0 8px}.try p:last-child{margin:0}.try b{color:var(--ink)}
+.try code{font-family:inherit;color:var(--ink);font-weight:600}
+.stage{position:sticky;top:0;align-self:start;display:flex;flex-direction:column;align-items:center;padding-block:8px;min-width:0}
+.panel h2{font-size:12px;letter-spacing:.12em;color:var(--ink2);font-weight:600;margin:0 0 6px}
+.panel .where{font-size:18px;font-weight:700;margin:0 0 16px;letter-spacing:-.01em}
+.panel dl{margin:0;display:flex;flex-direction:column;gap:14px}
+.panel dt{font-weight:600;font-size:14px;color:var(--ink)}
+.panel dd{margin:3px 0 0;font-size:14px;line-height:1.5;color:var(--ink2)}
+.panel .tag{display:inline-block;margin-top:2px;font-size:11px;color:var(--active);letter-spacing:.04em}
+
+/* ---------- phone ---------- */
+.phone{position:relative;width:390px;max-width:100%;height:844px;background:var(--bg);color:var(--tx);border-radius:44px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 0 0 1px #2a4439,0 24px 60px rgba(0,0,0,.5);isolation:isolate}
+.sbar{flex:none;height:44px;padding:14px 24px 0;display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:600}
+.sbar svg{display:block}
+.scr{flex:1;min-height:0;overflow-y:auto;padding:8px 20px 24px;scrollbar-width:thin}
+.scr.nonav{padding-bottom:32px}
+.home-ind{flex:none;height:5px;width:120px;border-radius:3px;background:#1a3c34;opacity:.85;margin:8px auto 8px}
+.brand{display:flex;align-items:center;gap:12px;font-size:22px;font-weight:600;color:var(--pri);margin:8px 0 16px}
+.logo{width:40px;height:40px;border-radius:10px;background:var(--pri);color:#fff;display:grid;place-items:center}
+h3.t{font-size:28px;line-height:1.15;margin:8px 0 6px;color:var(--pri);font-weight:700;letter-spacing:-.015em}
+p.sub{margin:0 0 16px;color:var(--mu);font-size:14px;line-height:1.5}
+.portal{background:var(--pri);color:#fff;border-radius:16px;padding:16px;display:flex;gap:14px;align-items:center;margin-bottom:16px}
+.portal .ic{flex:none;width:48px;height:48px;border-radius:12px;background:var(--mint);color:var(--pri);display:grid;place-items:center}
+.portal small{display:block;font-size:11px;letter-spacing:.12em;color:#e4b94d;font-weight:600;margin-bottom:2px}
+.portal span{font-size:14px;line-height:1.4}
+.ap-head{display:flex;align-items:center;gap:8px;margin:4px 0 16px;min-height:48px}
+.ap-head h3{flex:1;text-align:center;margin:0;font-size:20px;font-weight:600;color:var(--pri);padding-right:48px}
+.ap-head.left h3{text-align:left;padding-right:0}
+.ib{flex:none;width:48px;height:48px;border-radius:12px;border:0;background:transparent;display:grid;place-items:center;color:var(--pri)}
+.ib:hover{background:var(--mint)}
+
+/* fields */
+.fld{margin-bottom:14px}
+.fld>label,.lbl{display:block;font-size:14px;font-weight:600;margin-bottom:6px;color:var(--tx)}
+.req{color:var(--err)}
+.inp{position:relative;display:flex;align-items:center;min-height:48px;background:#fff;border:1.5px solid var(--bd);border-radius:10px;padding:0 12px;gap:10px;color:var(--mu)}
+.inp:focus-within{border-color:var(--pri);box-shadow:0 0 0 3px rgba(26,60,52,.18)}
+.inp input,.inp textarea{flex:1;min-width:0;border:0;outline:0;background:transparent;font:inherit;font-size:15px;color:var(--tx);padding:12px 0}
+.inp input::placeholder,.inp textarea::placeholder{color:var(--ph)}
+.inp.ta{align-items:flex-start;padding-top:2px}.inp.ta textarea{min-height:96px;resize:vertical;line-height:1.45}
+.eye{flex:none;min-width:44px;min-height:44px;margin-right:-8px;border:0;background:none;color:var(--pri);display:grid;place-items:center;border-radius:8px}
+.msg{margin:6px 0 0;font-size:13px;line-height:1.4;color:var(--mu);display:flex;gap:6px;align-items:flex-start}
+.msg svg{flex:none;margin-top:1px}
+.fld[data-s="err"] .inp{border-color:var(--err)}
+.fld[data-s="err"] .msg{color:var(--err)}
+.fld[data-s="ok"] .inp{border-color:var(--ok)}
+.fld[data-s="ok"] .msg{color:var(--ok)}
+.sel{width:100%;text-align:left;font-size:15px;color:var(--tx);justify-content:space-between}
+.sel .ph{color:var(--ph)}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:48px;border-radius:10px;border:1.5px solid var(--pri);background:var(--pri);color:#fff;font-weight:600;font-size:15px;padding:0 16px}
+.btn:hover{background:#13302a}
+.btn.out{background:#fff;color:var(--pri)}.btn.out:hover{background:var(--mint)}
+.btn.soft{background:var(--mint);color:var(--pri);border-color:var(--mint);font-weight:500}
+.btn.sm{width:auto;min-height:44px}
+.btn.txt{background:none;border-color:transparent;color:var(--pri);min-height:44px}
+.lnk{background:none;border:0;padding:0 2px;min-height:44px;color:var(--pri);font-weight:600;font-size:14px;text-decoration:underline;text-underline-offset:3px}
+.lnk.in{display:inline;min-height:0;padding:12px 2px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.mu{color:var(--mu);font-size:13px}
+.center{text-align:center}
+.help{display:flex;align-items:center;gap:10px;width:100%;min-height:48px;background:var(--mint);opacity:.9;border:0;border-radius:10px;padding:0 12px;color:var(--pri);font-size:13px;text-align:left;margin-top:12px}
+.help .c{width:24px;height:24px;border-radius:50%;background:#fff;display:grid;place-items:center;flex:none}
+
+/* cards */
+.card{background:#fff;border:1px solid #dfe4e0;border-radius:14px;padding:14px 16px;margin-bottom:12px}
+.card h4{margin:0 0 8px;font-size:17px;color:var(--pri);font-weight:700}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.stat{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid #dfe4e0;border-radius:14px;padding:12px;text-align:left;min-height:64px}
+.stat .c{flex:none;width:40px;height:40px;border-radius:50%;background:var(--mint);display:grid;place-items:center;color:var(--pri)}
+.stat b{display:block;font-size:22px;line-height:1.1;color:var(--pri)}.stat span{font-size:12px;color:var(--mu)}
+.feat{display:block;width:100%;text-align:left;border:0;background:var(--pri);color:#fff;border-radius:16px;padding:16px;margin:12px 0}
+.feat .top{display:flex;justify-content:space-between;align-items:center;font-size:13px}
+.chip{display:inline-flex;align-items:center;gap:4px;min-height:28px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:500;background:var(--mint);color:var(--pri);border:1px solid transparent}
+.chip.imp{background:#fcf0b9;color:var(--warntx);border-color:#e5cf74}
+.chip.gen{background:#fff;border-color:var(--bd);color:var(--mu)}
+.feat .chip{background:#e9efeb;color:var(--pri)}
+.feat .mid{display:flex;gap:14px;align-items:center;margin:16px 0}
+.feat .mid .c{flex:none;width:44px;height:44px;border-radius:50%;background:var(--mint);color:var(--pri);display:grid;place-items:center}
+.feat .mid b{display:block;font-size:17px}.feat .mid span{font-size:13px;opacity:.9}
+.pill{display:inline-flex;align-items:center;min-height:32px;padding:0 12px;border-radius:999px;font-size:13px;font-weight:600;background:var(--pill);color:#6a4c10}
+.pill.p-Resolved{background:#e1f1e8;color:var(--ok)}
+.pill.p-In-Progress{background:#d9e5de;color:var(--pri)}
+.step{display:flex;align-items:center;margin:14px 4px 12px}
+.step .n{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;color:var(--mu);width:64px}
+.step .dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--bd);background:#fff}
+.step .n.done .dot,.step .n.cur .dot{background:var(--ok);border-color:var(--ok)}
+.step .n.done,.step .n.cur{color:var(--ok);font-weight:600}
+.step .ln{flex:1;height:2px;background:var(--bd);margin-bottom:16px}.step .ln.done{background:var(--ok)}
+.sec{display:flex;justify-content:space-between;align-items:baseline;margin:20px 0 8px}
+.sec h4{margin:0;font-size:17px;color:var(--pri)}
+.upd{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#fff;border:1px solid #dfe4e0;border-radius:12px;padding:10px 12px;margin-bottom:8px;min-height:56px}
+.upd .c{flex:none;width:36px;height:36px;border-radius:50%;background:var(--mint);display:grid;place-items:center;color:var(--pri)}
+.upd .b{flex:1;min-width:0}.upd b{display:block;font-size:14px}.upd small{color:var(--mu);font-size:12px}
+.upd time{font-size:12px;color:var(--mu)}
+.nav{flex:none;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:10px 12px 6px;border-top:1px solid #dfe4e0;background:var(--bg)}
+.nav button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:56px;border-radius:12px;border:0;background:#efede6;color:var(--mu);font-size:11px}
+.nav button[aria-current="page"]{background:var(--mint);color:var(--pri);font-weight:600}
+.srch{margin-bottom:12px}
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.fchip{display:inline-flex;align-items:center;gap:4px;min-height:44px;padding:0 11px;border-radius:999px;border:1px solid var(--bd);background:#fff;font-size:13px;color:var(--tx)}
+.fchip[aria-pressed="true"]{background:var(--pri);color:#fff;border-color:var(--pri);font-weight:600}
+.ucard{display:block;width:100%;text-align:left;background:#fff;border:1px solid #dfe4e0;border-radius:14px;padding:14px 16px;margin-bottom:12px}
+.ucard.imp{border-left:4px solid var(--pri)}
+.ucard .tags{display:flex;gap:6px;align-items:center;margin-bottom:8px}
+.ucard time{margin-left:auto;font-size:12px;color:var(--mu)}
+.ucard h4{margin:0 0 4px;font-size:16px}.ucard p{margin:0 0 10px;font-size:13px;line-height:1.45;color:var(--tx)}
+.ucard .more{display:flex;justify-content:space-between;font-size:12px;color:var(--pri);font-weight:500}
+.empty{background:#fff;border:1px solid #dfe4e0;border-radius:14px;padding:18px 16px}
+.empty b{display:block;font-size:16px;margin-bottom:4px}.empty p{margin:0 0 8px;font-size:13px;color:var(--mu);line-height:1.45}
+.hl{display:flex;gap:12px;align-items:center;background:var(--mint);border:1px solid #b8cbc0;border-radius:12px;padding:12px;margin:12px 0}
+.hl.warn{background:var(--warnbg);border-color:#e5cf74}
+.hl .c{flex:none;width:36px;height:36px;border-radius:50%;background:#fff6;display:grid;place-items:center}
+.hl b{display:block;font-size:15px}.hl span{font-size:13px;color:var(--mu)}.hl.warn span{color:var(--warntx)}
+.dl{display:flex;flex-direction:column;gap:12px}.dl>div{display:flex;gap:10px}.dl .c{flex:none;color:var(--pri);margin-top:2px}
+.dl small{display:block;font-size:12px;color:var(--mu)}.dl span{font-size:14px;line-height:1.4}
+.file{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#fff;border:1px solid #dfe4e0;border-radius:14px;padding:12px 16px;margin-bottom:12px;min-height:64px}
+.file .ty{flex:none;width:40px;height:40px;border-radius:8px;background:var(--mint);display:grid;place-items:center;font-size:12px;font-weight:600;color:var(--pri)}
+.file b{display:block;font-size:13px;font-weight:600}.file small{font-size:12px;color:var(--mu)}.file small.okk{color:var(--ok);font-weight:500}
+.tile3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.tile3 .stat{flex-direction:row;padding:8px;gap:8px;min-height:48px}.tile3 .stat b{font-size:18px;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;flex:none;font-weight:600}
+.tile3 .stat span{font-size:11px}
+.pb{background:#f1e6cf}.ib2{background:var(--mint)}.rb{background:#dff0e6}
+.ccard{display:block;width:100%;text-align:left;background:#fff;border:1px solid #dfe4e0;border-radius:14px;padding:14px 16px;margin-bottom:12px}
+.ccard h4{margin:0 0 8px;font-size:15px;display:flex;justify-content:space-between;gap:8px}
+.ccard .m{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--mu);margin-top:6px}
+.ccard .m b{font-weight:500;color:var(--tx)}
+.banner{border-radius:12px;padding:10px 12px;display:flex;gap:10px;align-items:flex-start;margin:6px 0}
+.banner.s-Pending{background:var(--warnbg)}.banner.s-In-Progress,.banner.s-Resolved{background:var(--mint)}
+.banner b{display:block;font-size:15px}.banner span{font-size:13px;color:var(--mu)}.banner.s-Pending span{color:var(--warntx)}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;margin-top:10px}.kv small{display:block;font-size:12px;color:var(--mu)}.kv b{font-size:14px;font-weight:600}
+.tl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.tl li{display:flex;gap:10px;padding:6px;border-radius:10px}
+.tl li.cur{background:var(--mint)}
+.tl .mk{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;border:1.5px solid var(--bd);font-size:11px;color:var(--mu);background:#fff}
+.tl .done .mk{background:var(--ok);border-color:var(--ok);color:#fff}.tl .cur .mk{background:var(--pri);border-color:var(--pri);color:#fff}
+.tl .x{flex:1;min-width:0}.tl .x div{display:flex;justify-content:space-between;gap:8px;font-size:14px;font-weight:600}.tl .x div small{font-weight:400;color:var(--mu);font-size:12px}
+.tl .x p{margin:0;font-size:12px;color:var(--mu)}
+.ref{display:flex;justify-content:space-between;align-items:center;gap:8px}.ref b{font-size:22px;color:var(--pri)}
+.ok-ring{width:48px;height:48px;border-radius:50%;background:var(--mint);color:var(--ok);display:grid;place-items:center;margin:8px auto}
+.dlist{display:flex;flex-direction:column}.dlist>div{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid #e6eae7;font-size:14px}
+.dlist>div:last-child{border:0}.dlist span{color:var(--mu);font-size:13px}.dlist b{font-weight:500;text-align:right;min-width:0;overflow-wrap:anywhere}
+.avatar{width:56px;height:56px;border-radius:50%;background:var(--mint);color:var(--pri);display:grid;place-items:center;font-weight:600;flex:none}
+.h5{font-size:18px;color:var(--pri);margin:20px 0 8px;font-weight:700}
+
+/* overlays */
+.scrim{position:absolute;inset:0;background:rgba(10,20,16,.55);z-index:10;display:flex;align-items:center;justify-content:center;padding:20px}
+.scrim.bottom{align-items:flex-end;padding:0}
+.dialog{background:#fff;border-radius:16px;padding:20px;width:100%;max-height:92%;overflow-y:auto;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+.scrim.bottom .dialog{border-radius:20px 20px 0 0;padding:16px 20px 28px}
+.dialog h3{margin:0 0 6px;font-size:19px;color:var(--pri)}
+.dialog p{margin:0 0 14px;font-size:14px;color:var(--mu);line-height:1.45}
+.dh{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.dh h3{margin:0}
+.opts{display:flex;flex-direction:column}
+.opts button{display:flex;justify-content:space-between;align-items:center;min-height:52px;background:none;border:0;border-bottom:1px solid #eef0ee;text-align:left;font-size:15px;color:var(--tx)}
+.opts button[aria-checked="true"]{font-weight:600;color:var(--pri)}
+.btns{display:flex;gap:12px}.btns .btn{flex:1}
+.toast{position:absolute;left:16px;right:16px;bottom:90px;z-index:20;background:#17261f;color:#fff;border-radius:12px;padding:12px 16px;font-size:14px;display:flex;gap:10px;align-items:center;box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.hint-box{margin-top:12px;font-size:12px;color:var(--mu);text-align:center}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+@media (max-width:1100px){
+  .shell{grid-template-columns:minmax(0,1fr);gap:24px;padding:16px}
+  .side,.panel,.stage{position:static;max-height:none;overflow:visible;margin-block:0;padding-block:0}
+  .side{order:1}.stage{order:2}.panel{order:3}
+  .jump{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+  .grp{grid-column:1/-1}
+  .jump li.g{grid-column:1/-1}
+}
+@media (prefers-reduced-motion:no-preference){.scr{scroll-behavior:smooth}}
+</style>
+<div class="shell">
+  <aside class="side" aria-label="Prototype navigation">
+    <h1>HostelMate</h1>
+    <p class="lede">University hostel portal. Interactive prototype of a good HCI design.</p>
+    <p class="jh" id="jh">JUMP TO A SCREEN</p>
+    <ul class="jump" id="jump" aria-labelledby="jh"></ul>
+    <div class="try">
+      <p><b>Try it:</b> sign in with a student ID like <code>24CS104</code> or an email like <code>ahmed.104@uni.edu</code>, and any password of 8 or more characters.</p>
+      <p>Sign up: the password needs 8+ characters, a number and a symbol (for example <code>Hostel@2026</code>).</p>
+      <p>Everything on the phone is clickable. The jump list opens any screen directly, and the right panel changes with it.</p>
+    </div>
+  </aside>
+  <main class="stage" id="stage"><div class="phone" id="phone" aria-label="HostelMate phone prototype"></div></main>
+  <aside class="panel" aria-live="polite">
+    <h2>HCI PRINCIPLES ON THIS SCREEN</h2>
+    <p class="where" id="where"></p>
+    <dl id="pr"></dl>
+  </aside>
+</div>
+<script>
+"use strict";
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const P={
+ back:'<path d="M15 18l-6-6 6-6"/>',chevR:'<path d="M9 6l6 6-6 6"/>',chevD:'<path d="M6 9l6 6 6-6"/>',
+ eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+ eyeOff:'<path d="M3 3l18 18M10.6 5.1A10 10 0 0112 5c6 0 10 7 10 7a17 17 0 01-3.2 3.9M6.6 6.7A17 17 0 002 12s4 7 10 7c1.7 0 3.2-.4 4.5-1.1M9.9 9.9a3 3 0 004.2 4.2"/>',
+ lock:'<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/>',
+ mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
+ user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>',
+ grad:'<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/>',
+ home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/>',
+ grid:'<rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/>',
+ mega:'<path d="M3 10v4h3l8 4V6L6 10z"/><path d="M18 9a4 4 0 010 6"/>',
+ chat:'<path d="M4 4h16v12H9l-5 4z"/>',
+ bell:'<path d="M6 8a6 6 0 0112 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 20a2 2 0 004 0"/>',
+ check:'<path d="M5 12.5l4.5 4.5L19 7"/>',
+ alert:'<circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.5"/>',
+ clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+ drop:'<path d="M12 3s6 6.5 6 11a6 6 0 01-12 0c0-4.5 6-11 6-11z"/>',
+ moon:'<path d="M20 14.5A8 8 0 019.5 4a8 8 0 1010.5 10.5z"/>',
+ head:'<path d="M4 14v-2a8 8 0 0116 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/>',
+ copy:'<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 012-2h9"/>',
+ plus:'<path d="M12 5v14M5 12h14"/>',
+ search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',
+ cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+ down:'<path d="M12 4v12M7 11l5 5 5-5M5 20h14"/>',
+ bld:'<rect x="5" y="3" width="14" height="18" rx="1"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M10 21v-4h4v4"/>',
+ x:'<path d="M6 6l12 12M18 6L6 18"/>',
+ warn:'<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.5"/>',
+ wrench:'<path d="M14.5 6.5a4 4 0 005 5l-9 9a2.5 2.5 0 01-3.5-3.5z"/><path d="M14.5 6.5l3-3a4 4 0 00-1 0"/>',
+ pin:'<path d="M12 21s7-6 7-11a7 7 0 10-14 0c0 5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/>',
+ info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.5"/>',
+ phone:'<path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/>',
+ logout:'<path d="M9 4H5v16h4M16 8l4 4-4 4M20 12H9"/>',
+ key:'<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/>'
+};
+const ic=(n,s=20,x='')=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ${x}>${P[n]||''}</svg>`;
+
+const todayStr=()=>{try{return new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}catch(e){return '4 October 2026'}};
+const UPDATES=[
+ {id:'water',title:'Water supply maintenance',tags:['Important','Maintenance'],date:'1 Oct 2026',sum:'Water supply in Block B will be unavailable from 10:00 AM to 1:00 PM.',short:'Block B water unavailable today.',recent:'Block B supply notice.',when:'Today',icon:'drop',
+  posted:'Posted: 1 Oct 2026 · Block B',hl:['Water unavailable: 10:00 AM – 1:00 PM','Block B water supply will be temporarily unavailable.','clock','warn'],
+  det:[['cal','Date','Thursday, 1 October 2026'],['wrench','Issue','Block B’s main water supply line will undergo maintenance and tank disinfection.'],['drop','Action Required','Store sufficient water for morning use before 10:00 AM.'],['clock','Expected Restoration','Normal water pressure is expected by 1:30 PM.']],file:'Maintenance_Notice_BlockB.pdf'},
+ {id:'quiet',title:'Quiet hours reminder',tags:['General'],date:'30 Sep 2026',sum:'Please keep shared areas quiet after 10:00 PM.',short:'Quiet after 10 PM.',recent:'Quiet after 10 PM.',when:'Yesterday',icon:'moon',
+  posted:'Posted: 30 Sep 2026 · All Blocks',hl:['Quiet hours: after 10:00 PM','Please keep shared areas quiet overnight.','clock'],
+  det:[['cal','Effective','Daily'],['moon','Quiet Hours','After 10:00 PM'],['pin','Applies To','Bedrooms, corridors and shared areas'],['user','Student Action','Keep noise to a minimum and avoid disturbing other residents.']]},
+ {id:'dining',title:'Dining hall schedule',tags:['General'],date:'28 Sep 2026',sum:'Weekend dinner service begins at 6:30 PM.',short:'Dinner at 6:30 PM.',recent:'Dinner at 6:30 PM.',when:'28 Sep',icon:'bld',
+  posted:'Posted: 28 Sep 2026 · All Blocks',hl:['Weekend dinner: 6:30 PM','Weekend dinner service at the dining hall.','clock'],
+  det:[['cal','Schedule','This weekend'],['bld','Activity','Weekend dinner service begins at 6:30 PM.'],['pin','Location','Dining hall'],['info','Student Action','Plan your visit accordingly and follow the posted dining hall guidance.']]}
+];
+const CATS=['Maintenance','Electricity','Water Supply','Cleanliness','Other'];
+const LOCS=['Block B · Room 214','Block A · Room 101','Block B · Room 106','Block C · Room 203','Common area'];
+const PRIS=['Normal','High','Urgent — Immediate attention'];
+const SAMPLE='Water is leaking from the bathroom tap. It has been leaking since yesterday and is causing water to accumulate on the floor.';
+const initialComplaints=()=>[
+ {id:'HM-2026-004',title:'Water leakage in bathroom',cat:'Maintenance',loc:'Block B · Room 214',date:'28 September 2026',short:'28 Sep 2026',pri:'Normal',status:'In Progress',desc:SAMPLE,
+  d:{sub:'28 Sep 2026',rev:'28 Sep 2026',prog:'29 Sep 2026'},latest:['Latest Update','29 September 2026','Maintenance staff has been informed about the water leakage and the issue is currently being checked.']},
+ {id:'HM-2026-002',title:'Electricity issue in room',cat:'Electricity',loc:'Not provided',date:'26 September 2026',short:'26 Sep 2026',pri:'Normal',status:'Pending',desc:'Reported issue: Electricity in the room needs attention.',
+  d:{sub:'26 Sep 2026'},latest:['Submission Update','26 Sep 2026','Your complaint has been received and is waiting for review.']},
+ {id:'HM-2026-001',title:'Washroom cleaning required',cat:'Cleanliness',loc:'Not provided',date:'22 September 2026',short:'22 Sep 2026',pri:'Normal',status:'Resolved',desc:'Reported issue: The shared washroom needs cleaning.',
+  d:{sub:'22 Sep 2026',rev:'22 Sep 2026',prog:'22 Sep 2026',res:'22 Sep 2026'},latest:['Resolution','','The reported cleaning issue was addressed.']}
+];
+const S={view:'login',loggedIn:false,overlay:null,toast:null,
+ profile:{name:'Ahmed Khan',email:'ahmed.104@uni.edu',phone:'0300 1234567'},
+ complaints:initialComplaints(),updF:'All',updQ:'',updEmpty:false,updId:'water',dl:false,
+ cF:'All',cEmpty:false,statusId:'HM-2026-004',lastId:null,
+ form:{cat:'',loc:'',desc:'',pri:'Normal'},ferr:{},auto:null,sheet:null};
+const cOf=id=>S.complaints.find(c=>c.id===id);
+const nextId=()=>'HM-2026-'+String(Math.max(...S.complaints.map(c=>+c.id.slice(-3)),4)+1).padStart(3,'0');
+const firstName=()=>S.profile.name.split(' ')[0];
+const greeting=()=>{const h=new Date().getHours();return h<12?'Good morning':h<17?'Good afternoon':'Good evening'};
+</script>
+<script>
+/* ---------- shared bits ---------- */
+function fld(o){
+  return `<div class="fld" id="fld-${o.name}" data-hint="${esc(o.hint||'')}"><label for="in-${o.name}">${o.label} <span class="req" aria-hidden="true">*</span></label>
+  <div class="inp">${o.icon?ic(o.icon,18):''}<input id="in-${o.name}" name="${o.name}" type="${o.pw?'password':(o.type||'text')}" placeholder="${esc(o.ph)}" value="${esc(o.val||'')}" autocomplete="${o.ac||'off'}" required aria-required="true" aria-describedby="msg-${o.name}" ${o.im?`inputmode="${o.im}"`:''} data-f="${o.name}">
+  ${o.pw?`<button type="button" class="eye" data-act="eye" data-t="${o.name}" aria-label="Show password" aria-pressed="false">${ic('eye',20)}</button>`:''}</div>
+  <p class="msg" id="msg-${o.name}">${esc(o.hint||'')}</p></div>`;
+}
+function setMsg(n,s,t){
+  const f=$('#fld-'+n); if(!f)return;
+  f.dataset.s=s||''; const m=$('#msg-'+n);
+  m.innerHTML=(s==='err'?ic('alert',16):s==='ok'?ic('check',16):'')+`<span>${esc(t!=null?t:f.dataset.hint)}</span>`;
+  const i=$('#in-'+n); if(i)i.setAttribute('aria-invalid',String(s==='err'));
+}
+const head=(t,back,left)=>`<div class="ap-head ${left?'left':''}">${back?`<button class="ib" data-act="${back}" aria-label="Go back">${ic('back',24)}</button>`:''}<h3>${t}</h3></div>`;
+const brand=()=>`<div class="brand"><span class="logo">${ic('home',22)}</span>HostelMate</div>`;
+const helpLink=()=>`<button class="help" data-act="warden"><span class="c">${ic('head',14)}</span>Need help? Contact your hostel office</button>`;
+const nav=(a)=>`<nav class="nav" aria-label="Main">${[['dash','Dashboard','grid'],['updates','Updates','mega'],['complaints','Complaints','chat'],['profile','Profile','user']].map(([k,l,i])=>`<button data-act="go" data-v="${k}" ${a===k?'aria-current="page"':''}>${ic(i,22)}${l}</button>`).join('')}</nav>`;
+const statusPill=s=>`<span class="pill p-${s.replace(' ','-')}">${s}</span>`;
+
+/* ---------- auth ---------- */
+function vLogin(){return `<div class="scr nonav">${brand()}
+  <div class="portal"><span class="ic">${ic('bld',26)}</span><div><small>RESIDENT PORTAL</small><span>Updates, support and hostel life, all in one place.</span></div></div>
+  <h3 class="t">Welcome back</h3><p class="sub">Use your student ID or university email to access updates, requests and resident services.</p>
+  <form id="f-login" novalidate>
+  ${fld({name:'lid',label:'Student ID / University email',ph:'e.g. 24CS104 or name@university.edu',icon:'mail',ac:'username',hint:'Example: 24CS104 or name@uni.edu'})}
+  ${fld({name:'lpw',label:'Password',ph:'Enter your password',icon:'lock',pw:1,ac:'current-password',hint:'At least 8 characters'})}
+  <div class="row" style="margin:-4px 0 14px"><span class="mu">Secure university access</span><button type="button" class="lnk" data-act="forgot">Forgot password?</button></div>
+  <button class="btn" type="submit">Sign in</button></form>
+  <p class="center mu" style="margin:12px 0 0">New to HostelMate? <button class="lnk in" data-act="go" data-v="signup">Create an account</button></p>
+  ${helpLink()}<p class="hint-box">Secure access for university hostel residents</p></div>`}
+
+function vSignup(){return `<div class="scr nonav">${brand()}
+  <h3 class="t" id="su-h">Create your account</h3><p class="sub" id="su-s">Use your university details to access HostelMate.</p>
+  <form id="f-signup" novalidate>
+  ${fld({name:'name',label:'Full name',ph:'As shown on your student ID',icon:'user',ac:'name',hint:'Use the name shown on your student ID.'})}
+  ${fld({name:'sid',label:'Student ID / University email',ph:'Email or student ID',icon:'grad',ac:'username',hint:'Enter your university email or student ID.'})}
+  ${fld({name:'pw',label:'Password',ph:'Enter a password',icon:'lock',pw:1,ac:'new-password',hint:'Use 8+ characters with a number and a symbol.'})}
+  ${fld({name:'cpw',label:'Confirm password',ph:'Re-enter your password',icon:'lock',pw:1,ac:'new-password',hint:'Use the same password as above.'})}
+  <button class="btn" type="submit">Create account</button></form>
+  <p class="center mu" style="margin:12px 0 0">Already have an account? <button class="lnk in" data-act="go" data-v="login">Sign in</button></p>
+  ${helpLink()}</div>`}
+
+const vDone=()=>`<div class="scr nonav" style="display:flex;flex-direction:column;justify-content:center;min-height:100%">
+  <div class="center"><div class="ok-ring">${ic('check',24)}</div><h3 style="margin:8px 0;color:var(--pri);font-size:20px">Account created</h3>
+  <p class="sub" style="margin-bottom:20px">Your student account is ready. Sign in to access hostel updates and complaints.</p></div>
+  <button class="btn" data-act="go" data-v="login">Go to sign in</button></div>`;
+
+/* ---------- dashboard ---------- */
+function vDash(){
+  const act=S.complaints.filter(c=>c.status!=='Resolved'), c=act[0];
+  const st=c?['Submitted','In Progress','Resolved']:[]; const idx=c?(c.status==='Pending'?0:1):0;
+  const w=UPDATES[0];
+  return `<div class="scr"><h3 style="font-size:22px;margin:12px 0 2px;color:var(--tx)">${greeting()}, ${esc(firstName())}</h3><p class="mu" style="margin:0 0 12px">Block B · Room 214</p>
+  <div class="stats"><button class="stat" data-act="go" data-v="updates"><span class="c">${ic('bell',20)}</span><div><b>3</b><span>Recent updates</span></div></button>
+  <button class="stat" data-act="go" data-v="complaints"><span class="c" style="color:#c2570c">${ic('mega',20)}</span><div><b>${act.length}</b><span>My active complaints</span></div></button></div>
+  <button class="btn" data-act="go" data-v="new">Submit Complaint</button>
+  <button class="feat" data-act="open-upd" data-id="water"><div class="top"><span class="chip">Maintenance</span><span>10 AM – 1 PM</span></div>
+  <div class="mid"><span class="c">${ic('drop',22)}</span><div><b>Water supply maintenance</b><span>Block B water unavailable today.</span></div></div><span style="font-size:14px">View details →</span></button>
+  ${c?`<div class="card"><div class="row"><span style="font-size:13px">${c.id}</span>${statusPill(c.status)}</div><p style="margin:14px 0 4px;font-size:15px">${esc(c.title)}</p>
+  <div class="step" aria-label="Progress: ${st[idx]}">${st.map((s,i)=>`${i?`<span class="ln ${i<=idx?'done':''}"></span>`:''}<span class="n ${i<idx?'done':i===idx?'cur':''}"><span class="dot"></span>${s}</span>`).join('')}</div>
+  <button class="btn soft" data-act="status" data-id="${c.id}">Track complaint →</button></div>`:''}
+  <div class="sec"><h4>Recent updates</h4><button class="lnk" data-act="go" data-v="updates">See all</button></div>
+  ${UPDATES.slice(0,2).map(u=>`<button class="upd" data-act="open-upd" data-id="${u.id}"><span class="c">${ic(u.icon,18)}</span><span class="b"><b>${u.title.replace('Water supply maintenance','Water supply maintenance')}</b><small>${u.recent}</small></span><time>${u.when}</time></button>`).join('')}
+  </div>${nav('dash')}`}
+
+/* ---------- updates ---------- */
+function updMatches(){
+  const q=S.updQ.trim().toLowerCase();
+  return UPDATES.filter(u=>(S.updF==='All'||u.tags.includes(S.updF))&&(!q||(u.title+' '+u.sum+' '+u.tags.join(' ')).toLowerCase().includes(q)));
+}
+function updList(){
+  if(S.updEmpty)return `<div class="empty"><b>No updates yet</b><p>New hostel notices will appear here when published.</p><button class="lnk" data-act="go" data-v="dash" style="min-height:44px">Back to Dashboard</button></div>`;
+  const l=updMatches();
+  if(!l.length)return `<div class="empty"><b>No matching updates found.</b><p>Try another title or category, or clear your search.</p><button class="lnk" data-act="clear-q">Clear search</button></div>`;
+  return l.map(u=>`<button class="ucard ${u.tags.includes('Important')?'imp':''}" data-act="open-upd" data-id="${u.id}"><div class="tags">${u.tags.map(t=>`<span class="chip ${t==='Important'?'imp':t==='General'?'gen':'gen'}">${t==='Important'?ic('alert',12)+' ':''}${t}</span>`).join('')}<time>${u.date}</time></div>
+  <h4>${u.title}</h4><p>${u.sum}</p><div class="more"><span>View update details</span>${ic('chevR',16)}</div></button>`).join('');
+}
+const filterChips=(list,cur,act)=>list.map(f=>`<button class="fchip" data-act="${act}" data-v="${f}" aria-pressed="${cur===f}">${cur===f?ic('check',14)+' ':''}${f}</button>`).join('');
+const vUpdates=()=>`<div class="scr">${head('Hostel Updates','go-dash')}
+  <div class="inp srch">${ic('search',18)}<input id="in-q" type="search" placeholder="Search updates" value="${esc(S.updQ)}" aria-label="Search updates" autocomplete="off"></div>
+  <div class="filters" role="group" aria-label="Filter updates" id="ufil">${filterChips(['All','Maintenance','Important','General'],S.updF,'ufilter')}</div>
+  <div id="ulist" aria-live="polite">${updList()}</div></div>${nav('updates')}`;
+
+function vUpdate(){
+  const u=UPDATES.find(x=>x.id===S.updId), warn=u.tags.includes('Important');
+  return `<div class="scr nonav">${head('UPDATE DETAILS','go-updates')}
+  <h3 style="font-size:22px;margin:4px 0 4px;color:var(--pri)">${u.title.replace('Water supply maintenance','Water Supply Maintenance').replace('Quiet hours reminder','Quiet Hours Reminder').replace('Dining hall schedule','Dining Hall Schedule')}</h3>
+  <p class="mu" style="margin:0 0 8px">${u.posted}</p><div style="display:flex;gap:6px;margin-bottom:4px">${u.tags.map(t=>`<span class="chip ${t==='Important'?'imp':''}">${t}</span>`).join('')}</div>
+  <div class="hl ${warn?'warn':''}"><span class="c">${ic(u.hl[2],18)}</span><div><b>${u.hl[0]}</b><span>${u.hl[1]}</span></div></div>
+  <div class="card"><h4>Details</h4><div class="dl">${u.det.map(d=>`<div><span class="c">${ic(d[0],18)}</span><div><small>${d[1]}</small><span>${d[2]}</span></div></div>`).join('')}</div></div>
+  ${u.file?`<button class="file" data-act="download"><span class="ty">PDF</span><span style="flex:1;min-width:0"><b>${u.file}</b>${S.dl?'<small class="okk">Download started</small>':'<small>1.2 MB</small>'}</span>${S.dl?ic('check',20):ic('down',20)}</button>`:''}
+  <div class="card"><h4 style="font-size:16px">Have questions or an emergency?</h4><p class="mu" style="margin:0 0 10px">Need help or clarification regarding this update?</p>
+  <button class="btn soft" data-act="warden" style="justify-content:space-between"><span style="display:flex;gap:10px;align-items:center">${ic('phone',18)}Contact Warden Office</span>${ic('chevR',18)}</button></div></div>`;
+}
+
+/* ---------- complaints ---------- */
+function vComplaints(){
+  const list=S.cEmpty?[]:S.complaints, n=s=>list.filter(c=>c.status===s).length;
+  const vis=list.filter(c=>S.cF==='All'||c.status===S.cF);
+  return `<div class="scr"><div class="ap-head" style="margin-bottom:8px"><button class="ib" data-act="go-dash" aria-label="Go back">${ic('back',24)}</button><h3 style="padding-right:0">My Complaints</h3><span style="width:48px"></span></div>
+  <div class="row" style="align-items:center;margin-bottom:12px"><p class="mu" style="margin:0;max-width:150px;font-size:14px">Track and manage your reported issues.</p><button class="btn sm" data-act="go" data-v="new">${ic('plus',16)} New Complaint</button></div>
+  <div class="tile3">${[['Pending','pb'],['In Progress','ib2'],['Resolved','rb']].map(([s,c])=>`<div class="stat"><b class="${c}">${n(s)}</b><span>${s}</span></div>`).join('')}</div>
+  <div class="filters" role="group" aria-label="Filter complaints">${filterChips(['All','Pending','In Progress','Resolved'],S.cF,'cfilter')}</div>
+  ${!list.length?`<div class="empty center" style="padding:24px 16px"><div style="color:var(--pri)">${ic('chat',28)}</div><b style="margin-top:6px">No complaints yet</b><p>Report an issue and track its progress here.</p><button class="lnk" data-act="go" data-v="new">+ New Complaint</button></div>`
+   : !vis.length?`<div class="empty"><b>No ${S.cF.toLowerCase()} complaints</b><p>Choose another filter to see your other complaints.</p></div>`
+   : vis.map(c=>`<button class="ccard" data-act="status" data-id="${c.id}"><h4><span>${esc(c.title)}</span>${ic('chevR',18)}</h4><div class="m"><b>${c.id}</b>${statusPill(c.status)}</div><div class="m"><span>${c.cat} · ${c.short}</span></div></button>`).join('')}
+  </div>${nav('complaints')}`;
+}
+
+function selF(k,label,val,ph,hint,req){
+  const err=S.ferr[k];
+  return `<div class="fld" data-s="${err?'err':''}"><span class="lbl" id="lb-${k}">${label}${req?' <span class="req" aria-hidden="true">*</span>':''}</span>
+  <button type="button" class="inp sel" data-act="sheet" data-k="${k}" aria-haspopup="dialog" aria-labelledby="lb-${k} v-${k}" ${err?`aria-invalid="true" aria-describedby="e-${k}"`:''}><span id="v-${k}" class="${val?'':'ph'}">${esc(val||ph)}</span>${ic('chevD',18)}</button>
+  ${err?`<p class="msg" id="e-${k}">${ic('alert',16)}<span>${err}</span></p>`:hint?`<p class="msg">${hint}</p>`:''}</div>`;
+}
+function vNew(){
+  const f=S.form,e=S.ferr;
+  return `<div class="scr">${head('Submit Complaint','back-new')}<p class="sub center" style="margin-top:-8px">Tell us about the issue in your hostel.</p>
+  <form id="f-new" novalidate>
+  ${selF('cat','Complaint Category',f.cat,'Select a category','',1)}
+  ${selF('loc','Location',f.loc,'Select location','Choose your hostel block, room, or a shared area.',1)}
+  <div class="fld" data-s="${e.desc?'err':''}"><label class="lbl" for="in-desc">Describe the Problem <span class="req" aria-hidden="true">*</span></label>
+  <div class="inp ta"><textarea id="in-desc" placeholder="Explain the problem and include any important details..." ${e.desc?'aria-invalid="true" aria-describedby="e-desc"':''}>${esc(f.desc)}</textarea></div>
+  ${e.desc?`<p class="msg" id="e-desc">${ic('alert',16)}<span>${e.desc}</span></p>`:''}
+  <button type="button" class="lnk" data-act="sample" style="font-weight:500;font-size:13px">Insert a sample description</button></div>
+  ${selF('pri','Priority',f.pri,'Normal','Select urgent only for issues requiring immediate attention.',0)}
+  <button class="btn" type="submit">Submit Complaint</button><p class="hint-box" style="text-align:left">Your complaint will be sent to the hostel warden for review.</p></form></div>${nav('complaints')}`;
+}
+function vSubmitted(){
+  const c=cOf(S.lastId)||S.complaints[0];
+  return `<div class="scr">${head('Complaint Submitted','go-complaints',1)}
+  <div class="center"><div class="ok-ring">${ic('check',24)}</div><h3 style="margin:4px 0;font-size:18px;color:var(--pri)">Complaint Submitted Successfully</h3><p class="sub">Your complaint has been recorded. You can track its status at any time.</p></div>
+  <div class="card"><span class="mu">Complaint Reference Number</span><div class="ref"><b>${c.id}</b><button class="btn soft sm" data-act="copy" data-t="${c.id}" style="min-height:44px">${ic('copy',16)} Copy</button></div><span class="mu">Keep this number for future reference.</span></div>
+  <div class="card"><h4 style="font-size:15px">Complaint Summary</h4><div class="dlist"><div><span>Complaint category</span><b>${c.cat}</b></div><div><span>Location</span><b>${esc(c.loc)}</b></div>
+  <div style="display:block"><span>Description</span><p style="margin:4px 0 0;font-size:13px">${esc(c.desc)}</p></div><div><span>Priority</span><b>${c.pri.split(' ')[0]}</b></div><div><span>Initial status</span>${statusPill('Pending')}</div></div></div>
+  <div class="card"><h4 style="font-size:15px">What Happens Next?</h4><ol class="tl">${[['Complaint Received','Your complaint has been successfully recorded.'],['Under Review','The warden will review your complaint.'],['Status Updates','You can check the latest progress in Complaint Status.']].map((s,i)=>`<li><span class="mk">${i+1}</span><div class="x"><div>${s[0]}</div><p>${s[1]}</p></div></li>`).join('')}</ol></div>
+  <button class="btn" data-act="status" data-id="${c.id}">Track Complaint</button><button class="btn txt" data-act="go" data-v="complaints" style="margin-top:4px">Back to My Complaints</button></div>${nav('complaints')}`;
+}
+function vStatus(){
+  const c=cOf(S.statusId)||S.complaints[0], s=c.status, ci=s==='Pending'?1:s==='In Progress'?2:3;
+  const steps=[['Submitted','Complaint submitted successfully.',c.d.sub],[s==='Pending'?'Under Review':'Reviewed',s==='Pending'?'Waiting for hostel administration to review.':'Complaint reviewed by hostel administration.',c.d.rev],
+   ['In Progress',s==='Pending'?'Maintenance begins after review.':s==='Resolved'?'The reported cleaning issue was addressed.':'Maintenance issue is being addressed.',c.d.prog],['Resolved',s==='Resolved'?'This complaint has been marked as resolved.':'Waiting for the issue to be resolved.',c.d.res]];
+  const msg={'Pending':'Your complaint has been received and is waiting for review.','In Progress':'Your complaint is currently being worked on.','Resolved':'This complaint has been marked as resolved.'}[s];
+  return `<div class="scr">${head('Complaint Status','go-complaints',1)}
+  <div class="card"><h4 style="font-size:19px;margin-bottom:6px">${esc(c.title)}</h4><div class="banner s-${s.replace(' ','-')}"><span style="color:var(--pri)">${ic('clock',22)}</span><div><b>${s}</b><span>${msg}</span></div></div>
+  <p class="mu" style="margin:8px 0">${c.id}</p><div class="kv"><div><small>Category</small><b>${c.cat}</b></div><div><small>Location</small><b>${esc(c.loc)}</b></div><div><small>Submitted</small><b>${c.short}</b></div><div><small>Priority</small><b>${c.pri.split(' ')[0]}</b></div></div></div>
+  <div class="card"><h4>Progress</h4><ol class="tl">${steps.map((t,i)=>{const cur=ci,k=(i<cur||s==='Resolved')?'done':i===cur?'cur':'';
+   const r=k==='done'?(t[2]||''):i===cur?(s==='Pending'?'Waiting':(t[2]||'')):(i===2?'Not started':'Not completed');
+   return `<li class="${k}"><span class="mk">${k==='done'?ic('check',13):i+1}</span><div class="x"><div>${t[0]}<small>${r}</small></div><p>${t[1]}</p></div></li>`}).join('')}</ol></div>
+  <div class="card"><div class="row"><h4 style="margin:0">${c.latest[0]}</h4><span class="mu">${c.latest[1]}</span></div><p style="margin:8px 0 0;font-size:14px;line-height:1.45">${c.latest[2]}</p></div>
+  <div class="card"><h4>Your Complaint</h4><p style="margin:0;font-size:14px;line-height:1.45">${esc(c.desc)}</p></div></div>${nav('complaints')}`;
+}
+
+/* ---------- profile ---------- */
+const vProfile=()=>{const p=S.profile,ini=p.name.split(' ').map(x=>x[0]).slice(0,2).join('').toUpperCase();
+  const rows=(a)=>`<div class="card dlist" style="padding:4px 16px">${a.map(r=>`<div><span>${r[0]}</span><b>${esc(r[1])}</b></div>`).join('')}</div>`;
+  return `<div class="scr">${head('My Profile','go-dash',1)}
+  <div class="card"><div style="display:flex;gap:14px;align-items:center"><span class="avatar">${ini}</span><div><b style="font-size:18px">${esc(p.name)}</b><div class="mu">Computer Science Student</div><div class="mu">Roll No. 24CS104</div></div></div></div>
+  <button class="btn out" data-act="edit">Edit Profile</button>
+  <h4 class="h5">Personal Information</h4>${rows([['Full Name',p.name],['Roll Number','24CS104'],['Department','Computer Science'],['Semester','5th Semester'],['Email',p.email],['Phone',p.phone]])}
+  <h4 class="h5">Hostel Information</h4>${rows([['Hostel','University Hostel'],['Block','Block B'],['Room','Room 214']])}
+  <h4 class="h5">Account</h4><div class="btns" style="flex-direction:column"><button class="btn out" data-act="pwd" style="justify-content:flex-start">${ic('key',18)} Change password</button><button class="btn out" data-act="signout" style="justify-content:flex-start">${ic('logout',18)} Sign out</button></div></div>${nav('profile')}`;
+};
+</script>
+<script>
+/* ---------- overlays ---------- */
+function vOverlay(){
+  const o=S.overlay; if(!o)return '';
+  const wrap=(inner,label,bottom)=>`<div class="scrim ${bottom?'bottom':''}" data-act="scrim"><div class="dialog" role="dialog" aria-modal="true" aria-label="${label}" tabindex="-1">${inner}</div></div>`;
+  if(o==='sheet'){
+    const k=S.sheet,L={cat:['Choose a category',CATS],loc:['Choose a location',LOCS],pri:['Choose priority',PRIS]}[k];
+    return wrap(`<h3>${L[0]}</h3><div class="opts" role="radiogroup" aria-label="${L[0]}">${L[1].map(v=>`<button type="button" role="radio" aria-checked="${S.form[k]===v}" data-act="pick" data-k="${k}" data-v="${esc(v)}"><span style="display:flex;gap:8px;align-items:center">${v.startsWith('Urgent')?ic('warn',18):''}${v}</span>${S.form[k]===v?ic('check',18):''}</button>`).join('')}</div>`,L[0],1);
+  }
+  if(o==='discard')return wrap(`<h3>Discard this complaint?</h3><p>Your selections and description will be lost if you leave.</p><div class="btns"><button class="btn out" data-act="close">Keep editing</button><button class="btn" data-act="discard">Discard complaint</button></div>`,'Discard this complaint?');
+  if(o==='warden')return wrap(`<h3>Contact Warden Office</h3><p>Reach the hostel warden for questions about notices or complaints.</p><div class="dlist" style="margin-bottom:12px"><div><span>Warden</span><b>Mr. Imran Qureshi</b></div><div><span>Phone</span><b>0312 3456789</b></div><div><span>Email</span><b>warden.hostel@uni.edu</b></div><div><span>Office hours</span><b>Mon–Sat, 9:00 AM – 5:00 PM</b></div></div><p style="font-size:13px;color:var(--tx)">For an urgent issue outside office hours, call the phone number above.</p><div class="btns" style="margin-bottom:8px"><a class="btn" href="tel:03123456789" style="text-decoration:none">${ic('phone',18)} Call</a><a class="btn out" href="mailto:warden.hostel@uni.edu" style="text-decoration:none">${ic('mail',18)} Email</a></div><button class="btn txt" data-act="close">Done</button>`,'Contact Warden Office');
+  if(o==='signout')return wrap(`<h3>Sign out?</h3><p>You’ll need to sign in again to access HostelMate.</p><div class="btns"><button class="btn out" data-act="close">Cancel</button><button class="btn" data-act="signout-yes">Log Out</button></div>`,'Sign out');
+  if(o==='edit'){const p=S.profile;return wrap(`<div class="dh"><h3>Edit Profile</h3><button class="ib" data-act="close" aria-label="Close">${ic('x',20)}</button></div><form id="f-edit" novalidate>
+    ${fld({name:'ename',label:'Full Name',ph:'Full name',val:p.name,hint:'Use your name as shown on your student ID.',ac:'name'})}
+    ${fld({name:'eemail',label:'Email',ph:'name@uni.edu',val:p.email,hint:'Use your university email address.',ac:'email',type:'email'})}
+    ${fld({name:'ephone',label:'Phone',ph:'0300 1234567',val:p.phone,hint:'Use a valid 11-digit phone number.',ac:'tel',im:'tel'})}
+    <div class="btns"><button class="btn" type="submit">Save Changes</button><button class="btn out" type="button" data-act="close">Cancel</button></div></form>`,'Edit Profile');}
+  if(o==='pwd')return wrap(`<div class="dh"><h3>Change Password</h3><button class="ib" data-act="close" aria-label="Close">${ic('x',20)}</button></div><form id="f-pwd" novalidate>
+    ${fld({name:'pcur',label:'Current Password',ph:'Enter current password',pw:1,hint:'Enter the password you use to sign in.',ac:'current-password'})}
+    ${fld({name:'pnew',label:'New Password',ph:'Enter new password',pw:1,hint:'Use at least 8 characters.',ac:'new-password'})}
+    ${fld({name:'pconf',label:'Confirm Password',ph:'Re-enter new password',pw:1,hint:'Re-enter your new password.',ac:'new-password'})}
+    <div class="btns"><button class="btn" type="submit">Save Password</button><button class="btn out" type="button" data-act="close">Cancel</button></div></form>`,'Change Password');
+  return '';
+}
+
+/* ---------- validators: return [state,message]; state '' resets to the hint ---------- */
+const reId=/^(\d{2}[A-Za-z]{2,3}\d{2,4}|[^\s@]+@[^\s@]+\.[^\s@]+)$/;
+const val=n=>($('#in-'+n)||{value:''}).value;
+const VAL={
+ lid:v=>!v.trim()?['err','Enter your student ID or university email.']:reId.test(v.trim())?['','']:['err','Use a student ID like 24CS104 or an email like name@university.edu.'],
+ lpw:v=>!v?['err','Enter your password.']:v.length<8?['err','Your password has at least 8 characters.']:['',''],
+ name:v=>v.trim().length<3?['err','Enter your full name.']:['ok','Your name is ready.'],
+ sid:v=>!v.trim()?['err','Enter your university email or student ID.']:reId.test(v.trim())?['ok','University detail looks valid.']:['err','Use a valid university email (name@uni.edu) or student ID (24CS104).'],
+ pw:v=>/^(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/.test(v)?['ok','Password meets the requirements.']:['err','Use 8+ characters with a number and a symbol.'],
+ cpw:v=>!v?['err','Re-enter your password.']:v===val('pw')?['ok','Passwords match.']:['err','Passwords do not match.'],
+ ename:v=>v.trim().length<3?['err','Enter your full name.']:['',''],
+ eemail:v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim())?['','']:['err','Enter a valid email, like name@uni.edu.'],
+ ephone:v=>v.replace(/\D/g,'').length===11?['','']:['err','Enter an 11-digit phone number, like 0300 1234567.'],
+ pcur:v=>v?['','']:['err','Enter your current password.'],
+ pnew:v=>v.length<8?['err','Use at least 8 characters.']:v===val('pcur')?['err','Choose a password different from your current one.']:['',''],
+ pconf:v=>!v?['err','Re-enter your new password.']:v===val('pnew')?['','']:['err','Passwords do not match.']
+};
+const FORMS={login:['lid','lpw'],signup:['name','sid','pw','cpw'],edit:['ename','eemail','ephone'],pwd:['pcur','pnew','pconf']};
+function check(n){const r=VAL[n](val(n));setMsg(n,r[0],r[1]||null);return r[0]!=='err'}
+function checkForm(k){let first=null;FORMS[k].forEach(n=>{if(!check(n)&&!first)first=n});
+  if(k==='signup'){const bad=!!first;$('#su-h').textContent=bad?'Check your details':'Create your account';$('#su-s').textContent=bad?'Fix the highlighted fields, then try again.':'Use your university details to access HostelMate.'}
+  if(first){const i=$('#in-'+first);i&&i.focus()}
+  return !first}
+
+/* ---------- state helpers ---------- */
+function addComplaint(f){
+  const id=nextId(), t=f.desc.split(/[.!?\n]/)[0].trim().slice(0,46);
+  S.complaints.unshift({id,title:t||f.cat+' issue',cat:f.cat,loc:f.loc,date:todayStr(),short:todayStr().replace(/(\w{3})\w*/,'$1'),pri:f.pri,status:'Pending',desc:f.desc,
+   d:{sub:todayStr().replace(/(\w{3})\w*/,'$1')},latest:['Submission Update',todayStr().replace(/(\w{3})\w*/,'$1'),'Your complaint has been received and is waiting for review.']});
+  return id;
+}
+const blankForm=()=>{S.form={cat:'',loc:'',desc:'',pri:'Normal'};S.ferr={}};
+function toast(m){const ph=$('#phone');ph.querySelectorAll('.toast').forEach(t=>t.remove());const d=document.createElement('div');d.className='toast';d.setAttribute('role','status');d.innerHTML=ic('check',18)+'<span>'+esc(m)+'</span>';ph.appendChild(d);setTimeout(()=>d.remove(),2800)}
+
+/* ---------- principles ---------- */
+const PR={
+'login':['Login',[['Consistency and standards','One typeface, one green and the same input and button styles on every screen, so nothing needs relearning.'],['Error prevention','Visible labels, example formats (24CS104 or name@university.edu) and a Show button on the password field cut typing mistakes.'],['Match with the real world','Asks for a “Student ID / University email”, the words residents already use.'],['Help and documentation','“Forgot password?” and “Need help? Contact your hostel office” sit on the screen, not behind a menu.'],['Accessibility','48px touch targets, text no smaller than 11px, and labels that stay visible when the field is filled.']]],
+'login-err':['Login with errors',[['Informative feedback','Each field checks itself when you leave it and again on Sign in, so you see what is wrong straight away.'],['Help users recover from errors','Messages say what is wrong and how to fix it, in plain words with an example.'],['Not relying on colour alone','Errors use a red border, an icon and text, so they are readable without seeing red.'],['User control','Whatever you typed is kept, and the message clears as soon as the field is valid.']]],
+'signup':['Create account',[['Recognition rather than recall','The rule for each field is printed under it before you type, for example “8+ characters with a number and a symbol”.'],['Error prevention','A confirm-password field and Show buttons catch typos before the account is created.'],['Minimalist design','Four fields, nothing else. Each one is needed to make the account.'],['Consistency','Same header, field style and “Already have an account? Sign in” pattern as the login screen.']]],
+'signup-err':['Create account with errors',[['Informative feedback','The heading changes to “Check your details”. Failing fields show what is wrong, and passing fields turn green with a check.'],['Help users recover from errors','Each message gives the fix: “Use 8+ characters with a number and a symbol.”'],['Live validation','After you leave a field, it re-checks as you type, so you see the problem disappear.'],['Not relying on colour alone','Red or green is always paired with an icon and a sentence.']]],
+'account-created':['Account created',[['Visibility of system status','A check icon and “Account created” confirm that sign-up worked.'],['Clear next step','One primary button, “Go to sign in”, is the only thing to do.'],['Minimalist design','The screen holds the message and the button, with no competing links.']]],
+'dash':['Dashboard',[['Visibility of system status','The active-complaints count and a Submitted → In Progress → Resolved tracker show where things stand without opening anything.'],['Visual hierarchy','Greeting and counts first, one primary action next, then the urgent notice in the darkest card, then history.'],['Recognition rather than recall','The bottom bar keeps four labelled icons on screen, with the current section highlighted.'],['Fitts’s law','Submit Complaint is full width, and every target is at least 48px tall.'],['Match with the real world','Shows “Block B · Room 214”, the way residents describe where they live.']]],
+'updates':['Hostel updates',[['Flexibility and efficiency','Search and category chips get you to a notice in one or two taps.'],['Visibility of state','The active filter is dark with a check mark. Important notices get a left bar and an “Important” tag.'],['Recognition rather than recall','Every card shows category, date, title and a summary, so you rarely need to open one just to decide.'],['Consistency','The same notice card is used here, on the dashboard and in search results.']]],
+'updates-none':['Updates: no search results',[['Help users recover from errors','Says nothing matched, suggests a next step and offers “Clear search”.'],['Visibility of system status','Your search text and the filter chips stay visible, so you can see why the list is empty.'],['Plain language','“No matching updates found” instead of a code or a blank screen.']]],
+'updates-empty':['Updates: empty state',[['Visibility of system status','Explains that there are no updates yet, instead of showing a blank list.'],['Guidance','Tells you what will appear here and gives a way out with “Back to Dashboard”.'],['Minimalist design','One card and one link. Nothing suggests that something is broken.']]],
+'update':['Update details',[['Progressive disclosure','The list shows a summary. The full instructions are one tap away on this screen.'],['Chunking and proximity','A highlight box, grouped details, the attachment and the help card are separate blocks with clear spacing.'],['Visibility of system status','Tapping the PDF row shows “Download started” and a check, so the tap is acknowledged.'],['Help at the point of need','“Have questions or an emergency?” sits right below the instructions.'],['User control','A back arrow is always top left.']]],
+'warden':['Contact warden dialog',[['Help and documentation','Shows the warden’s name, phone, email and office hours in one place, with a note on what to do in an urgent case.'],['Flexibility and efficiency','Call and Email buttons open the phone or mail app in one tap.'],['User control','Close with Done, tap outside the dialog, or press Esc.'],['Focus management','The dialog takes focus and the background is dimmed, so it is clear what is active.']]],
+'complaints':['My complaints',[['Visibility of system status','Three count tiles summarise the list, and each card has a status pill with the same wording used everywhere.'],['Flexibility and efficiency','Filter chips narrow the list, and “+ New Complaint” stays at the top.'],['Consistency','Status words and colours match the dashboard and the status screen.'],['Recognition rather than recall','Each card shows the reference number, category and date.']]],
+'complaints-empty':['My complaints: empty',[['Guidance for first use','Explains what the screen is for and offers “+ New Complaint” right there.'],['Visibility of system status','The count tiles show 0, which matches the empty list.'],['Minimalist design','An icon, two lines and one action.']]],
+'new':['Submit complaint',[['Error prevention','Category, location and priority are chosen from lists, so there is nothing to misspell. Priority defaults to Normal.'],['Recognition rather than recall','Required fields carry a *, and short hints explain what to pick and when to use Urgent.'],['Expectation setting','“Your complaint will be sent to the hostel warden for review.” tells you what happens after you tap.'],['User control','Leaving with unsaved text asks first, and “Insert a sample description” speeds up a demo.']]],
+'new-err':['Submit complaint with errors',[['Help users recover from errors','Each problem is explained under its own field in plain language.'],['Not relying on colour alone','Red border, alert icon and a sentence together.'],['Immediate feedback','Choosing an option or typing clears that field’s error at once.'],['User control','Everything already entered is kept.']]],
+'sheet':['Choose an option',[['Recognition rather than recall','All options are listed, so you pick instead of typing.'],['Fitts’s law','Rows are 52px tall, and the current choice is bold with a check.'],['User control','Tap outside or press Esc to close without choosing.'],['Visible warning','“Urgent — Immediate attention” has a warning icon so it is not picked by accident.']]],
+'discard':['Discard complaint',[['User control and freedom','Leaving with unsaved work asks first. “Keep editing” is the safe way out.'],['Error prevention','The destructive button says “Discard complaint”, not “Yes”, so the result is clear.'],['Plain language','Tells you exactly what will be lost.']]],
+'submitted':['Complaint submitted',[['Visibility of system status','A check icon and a reference number confirm that the complaint was recorded.'],['Support for memory','Copy button and “Keep this number for future reference”.'],['Expectation setting','“What Happens Next?” lists the three stages before you leave.'],['Error detection','The summary shows what was recorded, so mistakes are spotted early.'],['Clear next steps','One primary button, “Track Complaint”, with a quieter “Back to My Complaints”.']]],
+'status':['Complaint status',[['Visibility of system status','The progress list marks steps as done, current or upcoming, with dates. The current step is highlighted.'],['Colour with text','Yellow means Pending and green means in progress or resolved, and each state is also written out.'],['Match with the real world','“Waiting for hostel administration to review” describes what is actually happening.'],['Chunking','Summary, progress, latest update and your original text are separate cards.'],['Transparency','The latest update or resolution note is shown without opening anything else.']]],
+'profile':['My profile',[['Recognition rather than recall','Details are grouped under Personal and Hostel Information, as label and value rows.'],['User control','Edit Profile is a clear button, and Change password and Sign out sit in their own Account section.'],['Consistency','The same card and row pattern is used across the app.'],['Error prevention','Risky actions are away from the common taps and open a dialog.']]],
+'edit':['Edit profile',[['Error prevention','Current values are pre-filled, and hints explain the expected format (for example an 11-digit phone number).'],['User control','Cancel and the × both close the dialog without saving.'],['Informative feedback','A message confirms “Profile updated” after saving.'],['Help users recover from errors','Invalid fields show what to change next to the field.']]],
+'pwd':['Change password',[['Error prevention','Show buttons, a confirm field and the 8-character rule up front.'],['Security with usability','Asks for the current password, and rejects a new one that is the same.'],['Informative feedback','Each field explains its error, and saving shows a confirmation.']]],
+'signout':['Sign out',[['Error prevention','A confirmation stops accidental sign-outs.'],['Plain language','Tells you the consequence: you will need to sign in again.'],['Clear labels','“Cancel” is outlined and “Log Out” is solid, so the action is clear.']]]
+};
+function keyFor(){
+  const o=S.overlay; if(o&&PR[o])return o;
+  const v=S.view, bad=!!document.querySelector('#phone .fld[data-s="err"]');
+  switch(v){
+    case 'login':return bad?'login-err':'login';
+    case 'signup':return bad?'signup-err':'signup';
+    case 'done':return 'account-created';
+    case 'updates':return S.updEmpty?'updates-empty':updMatches().length?'updates':'updates-none';
+    case 'complaints':return S.cEmpty?'complaints-empty':'complaints';
+    case 'new':return Object.keys(S.ferr).length?'new-err':'new';
+  }
+  return v;
+}
+</script>
+<script>
+const VIEWS={login:vLogin,signup:vSignup,done:vDone,dash:vDash,updates:vUpdates,update:vUpdate,complaints:vComplaints,new:vNew,submitted:vSubmitted,status:vStatus,profile:vProfile};
+const AUTHV=['login','signup','done'];
+const SB='<svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor" aria-hidden="true"><rect x="0" y="8" width="3" height="4" rx=".7"/><rect x="5" y="5.5" width="3" height="6.5" rx=".7"/><rect x="10" y="3" width="3" height="9" rx=".7"/><rect x="15" y="0" width="3" height="12" rx=".7"/></svg><svg width="16" height="12" viewBox="0 0 24 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M2 6a15 15 0 0120 0M6 10.5a9 9 0 0112 0M10 15a3 3 0 014 0"/></svg><svg width="26" height="12" viewBox="0 0 26 12" aria-hidden="true"><rect x=".5" y=".5" width="22" height="11" rx="3.5" fill="none" stroke="currentColor" opacity=".5"/><rect x="2" y="2" width="19" height="8" rx="2" fill="currentColor"/><rect x="24" y="4" width="2" height="4" rx="1" fill="currentColor" opacity=".5"/></svg>';
+
+function render(keep){
+  const ph=$('#phone'),old=ph.querySelector('.scr'),top=keep&&old?old.scrollTop:0;
+  ph.innerHTML=`<div class="sbar"><span>9:41</span><span style="display:flex;gap:6px;align-items:center">${SB}</span></div>${VIEWS[S.view]()}<div class="home-ind"></div>${vOverlay()}`;
+  const sc=ph.querySelector('.scr'); if(sc&&top)sc.scrollTop=top;
+  if(S.auto){const a=S.auto;S.auto=null;if(a==='login'||a==='signup')checkForm(a);}
+  const dlg=ph.querySelector('.dialog');
+  if(dlg){const f=dlg.querySelector('input');(f||dlg).focus({preventScroll:true})}
+  refresh();
+}
+function go(view,setup){
+  S.overlay=null;S.cEmpty=false;S.updEmpty=false;S.auto=null;S.view=view;
+  if(!AUTHV.includes(view))S.loggedIn=true;
+  if(setup)setup();
+  render();
+  const sc=$('#phone .scr'); if(sc)sc.scrollTop=0;
+}
+function refresh(){
+  const k=keyFor();
+  $('#where').textContent=PR[k][0];
+  $('#pr').innerHTML=PR[k][1].map(p=>`<div><dt>${p[0]}</dt><dd>${p[1]}</dd></div>`).join('');
+  document.querySelectorAll('#jump button').forEach(b=>b.toggleAttribute('aria-current',b.dataset.j===k)||0);
+  document.querySelectorAll('#jump button').forEach(b=>{b.dataset.j===k?b.setAttribute('aria-current','true'):b.removeAttribute('aria-current')});
+  try{history.replaceState(null,'','#'+k)}catch(e){}
+}
+
+/* ---------- jump list ---------- */
+const newF=()=>{blankForm()};
+const JUMPS=[
+ ['Account'],
+ ['login','Login',()=>go('login')],
+ ['login-err','Login with errors',()=>go('login',()=>S.auto='login')],
+ ['signup','Sign up',()=>go('signup')],
+ ['signup-err','Sign up with errors',()=>go('signup',()=>S.auto='signup')],
+ ['account-created','Account created',()=>go('done')],
+ ['Home'],
+ ['dash','Dashboard',()=>go('dash')],
+ ['Hostel updates'],
+ ['updates','Updates list',()=>go('updates',()=>{S.updF='All';S.updQ=''})],
+ ['updates-none','Updates: no results',()=>go('updates',()=>{S.updF='All';S.updQ='laundry'})],
+ ['updates-empty','Updates: empty',()=>go('updates',()=>{S.updEmpty=true})],
+ ['update','Update details',()=>go('update',()=>{S.updId='water';S.dl=false})],
+ ['warden','Contact warden',()=>go('update',()=>{S.updId='water';S.overlay='warden'})],
+ ['Complaints'],
+ ['complaints','My complaints',()=>go('complaints',()=>{S.cF='All'})],
+ ['complaints-empty','My complaints: empty',()=>go('complaints',()=>{S.cF='All';S.cEmpty=true})],
+ ['new','Submit complaint',()=>go('new',newF)],
+ ['new-err','Submit with errors',()=>go('new',()=>{blankForm();S.ferr={cat:'Please select a complaint category.',loc:'Please select a location.',desc:'Please describe the problem.'}})],
+ ['sheet','Choose a category',()=>go('new',()=>{blankForm();S.overlay='sheet';S.sheet='cat'})],
+ ['discard','Discard complaint',()=>go('new',()=>{blankForm();S.form.cat='Maintenance';S.form.desc=SAMPLE;S.overlay='discard'})],
+ ['submitted','Complaint submitted',()=>go('submitted',()=>{if(!S.lastId||!cOf(S.lastId))S.lastId=addComplaint({cat:'Maintenance',loc:'Block B · Room 214',desc:SAMPLE,pri:'Normal'})})],
+ ['status','Complaint status',()=>go('status',()=>{S.statusId='HM-2026-004'})],
+ ['Profile'],
+ ['profile','Profile',()=>go('profile')],
+ ['edit','Edit profile',()=>go('profile',()=>S.overlay='edit')],
+ ['pwd','Change password',()=>go('profile',()=>S.overlay='pwd')],
+ ['signout','Sign out',()=>go('profile',()=>S.overlay='signout')]
+];
+const JM={};
+$('#jump').innerHTML=JUMPS.map(j=>j.length===1?`<li class="g grp">${j[0]}</li>`:(JM[j[0]]=j[2],`<li><button type="button" data-j="${j[0]}">${j[1]}</button></li>`)).join('');
+$('#jump').addEventListener('click',e=>{
+  const b=e.target.closest('button[data-j]'); if(!b)return;
+  JM[b.dataset.j]();
+  if(matchMedia('(max-width:1100px)').matches)$('#stage').scrollIntoView({behavior:'smooth',block:'start'});
+});
+
+/* ---------- events ---------- */
+const ph=$('#phone');
+ph.addEventListener('click',e=>{
+  const t=e.target.closest('[data-act]'); if(!t)return;
+  const a=t.dataset.act,d=t.dataset;
+  if(a==='scrim'){if(e.target===t){S.overlay=null;render(true)}return}
+  switch(a){
+    case 'go':go(d.v,d.v==='new'?newF:null);break;
+    case 'go-dash':go('dash');break;
+    case 'go-updates':go('updates');break;
+    case 'go-complaints':go('complaints');break;
+    case 'back-new':if(S.form.cat||S.form.loc||S.form.desc.trim()){S.overlay='discard';render(true)}else go('complaints');break;
+    case 'discard':blankForm();go('complaints');break;
+    case 'close':S.overlay=null;render(true);break;
+    case 'open-upd':S.updId=d.id;S.dl=false;go('update');break;
+    case 'download':S.dl=true;render(true);toast('Download started');break;
+    case 'warden':S.overlay='warden';render(true);break;
+    case 'status':S.statusId=d.id;go('status');break;
+    case 'ufilter':S.updF=d.v;render(true);break;
+    case 'cfilter':S.cF=d.v;render(true);break;
+    case 'clear-q':S.updQ='';S.updF='All';render(true);break;
+    case 'sheet':S.overlay='sheet';S.sheet=d.k;render(true);break;
+    case 'pick':S.form[d.k]=d.v;delete S.ferr[d.k];S.overlay=null;render(true);{const b=$(`[data-k="${d.k}"]`);b&&b.focus({preventScroll:true})}break;
+    case 'sample':S.form.desc=SAMPLE;delete S.ferr.desc;render(true);break;
+    case 'copy':{const ok=()=>toast('Reference number copied');const no=()=>toast('Copy is blocked here. Reference: '+d.t);
+      try{navigator.clipboard.writeText(d.t).then(ok,no)}catch(x){no()}break}
+    case 'eye':{const i=$('#in-'+d.t),show=i.type==='password';i.type=show?'text':'password';t.innerHTML=ic(show?'eyeOff':'eye',20);t.setAttribute('aria-label',show?'Hide password':'Show password');t.setAttribute('aria-pressed',String(show));break}
+    case 'forgot':toast('Prototype only. A reset link would go to your university email.');break;
+    case 'edit':S.overlay='edit';render(true);break;
+    case 'pwd':S.overlay='pwd';render(true);break;
+    case 'signout':S.overlay='signout';render(true);break;
+    case 'signout-yes':S.loggedIn=false;go('login');break;
+  }
+  refresh();
+});
+ph.addEventListener('submit',e=>{
+  e.preventDefault(); const id=e.target.id;
+  if(id==='f-login'){if(checkForm('login')){S.loggedIn=true;go('dash');toast('Signed in as '+S.profile.name)}else refresh();}
+  else if(id==='f-signup'){if(checkForm('signup'))go('done');else refresh();}
+  else if(id==='f-edit'){if(checkForm('edit')){S.profile={name:val('ename').trim(),email:val('eemail').trim(),phone:val('ephone').trim()};S.overlay=null;render(true);toast('Profile updated')}else refresh();}
+  else if(id==='f-pwd'){if(checkForm('pwd')){S.overlay=null;render(true);toast('Password changed')}else refresh();}
+  else if(id==='f-new'){
+    const f=S.form,er={};
+    if(!f.cat)er.cat='Please select a complaint category.';
+    if(!f.loc)er.loc='Please select a location.';
+    if(!f.desc.trim())er.desc='Please describe the problem.';else if(f.desc.trim().length<10)er.desc='Add a few more details so the warden can act on it.';
+    S.ferr=er;
+    if(Object.keys(er).length){render(true);const k=Object.keys(er)[0];const c=k==='desc'?$('#in-desc'):$(`[data-k="${k}"]`);c&&c.focus();}
+    else{S.lastId=addComplaint(f);blankForm();go('submitted')}
+  }
+});
+ph.addEventListener('input',e=>{
+  const t=e.target;
+  if(t.id==='in-desc'){S.form.desc=t.value;if(S.ferr.desc&&t.value.trim().length>=10){delete S.ferr.desc;const f=t.closest('.fld');f.dataset.s='';const m=f.querySelector('.msg');m&&m.remove();refresh()}}
+  else if(t.id==='in-q'){S.updQ=t.value;$('#ulist').innerHTML=updList();refresh()}
+  else if(t.dataset.f){const f=t.closest('.fld');if(f&&(f.dataset.s==='err'||f.dataset.s==='ok'||f.dataset.touched)){check(t.dataset.f);
+    if(t.dataset.f==='pw'&&val('cpw')&&$('#fld-cpw').dataset.touched)check('cpw');refresh()}}
+});
+ph.addEventListener('focusout',e=>{
+  const t=e.target,n=t.dataset&&t.dataset.f; if(!n||!t.closest('#f-signup,#f-login'))return;
+  if(t.value||t.closest('.fld').dataset.touched){t.closest('.fld').dataset.touched='1';check(n);refresh()}
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&S.overlay){S.overlay=null;render(true)}
+  if(e.key==='Tab'&&S.overlay){const d=$('#phone .dialog');if(d&&!d.contains(document.activeElement)){e.preventDefault();d.focus()}}
+});
+
+/* ---------- start ---------- */
+(function(){
+  let k='login'; try{k=location.hash.slice(1)||'login'}catch(e){}
+  if(JM[k])JM[k](); else go('login');
+})();
+</script>
+
+</body></html>
